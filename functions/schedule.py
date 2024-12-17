@@ -1,7 +1,7 @@
 import datetime
 
 from functions.parser import Parser
-from config import DISCONNECTIONS_URL, NUM_TURNS
+from config import DISCONNECTIONS_URL, NUM_TURNS, TIMEZONE
 
 
 class Schedule:
@@ -29,7 +29,7 @@ class Schedule:
         self.last_updated = last_update_text
 
     def need_updates(self):
-        time_now = datetime.datetime.now()
+        time_now = datetime.datetime.now(TIMEZONE)
         return not self.disconnections_by_turns or (time_now - self.get_last_updated_dt()).total_seconds() / 60 >= 30
 
     def update(self):
