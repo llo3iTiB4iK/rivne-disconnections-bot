@@ -1,23 +1,37 @@
+import sqlite3
 import aiosqlite
 
-from config import DATABASE
+from config import DATABASE, MULTI_THREADED
 
 
 class DatabaseManager:
     def __init__(self):
         self.database = DATABASE
+        self.use_async = MULTI_THREADED
 
     async def _execute(self, query, params=(), fetch=None):
-        async with aiosqlite.connect(self.database) as conn:
-            cursor = await conn.execute(query, params)
-            if fetch == "one":
-                result = await cursor.fetchone()
-            elif fetch == "all":
-                result = await cursor.fetchall()
-            else:
-                result = None
-            await conn.commit()
-            return result
+        if self.use_async:
+            async with aiosqlite.connect(self.database) as conn:
+                cursor = await conn.execute(query, params)
+                if fetch == "one":
+                    result = await cursor.fetchone()
+                elif fetch == "all":
+                    result = await cursor.fetchall()
+                else:
+                    result = None
+                await conn.commit()
+                return result
+        else:
+            with sqlite3.connect(self.database) as conn:
+                cursor = conn.execute(query, params)
+                if fetch == "one":
+                    result = cursor.fetchone()
+                elif fetch == "all":
+                    result = cursor.fetchall()
+                else:
+                    result = None
+                conn.commit()
+                return result
 
     async def initialize(self):
         await self._execute("""
@@ -48,7 +62,7 @@ class DatabaseManager:
     async def add_user(self, user_id):
         try:
             await self._execute("INSERT INTO users (user_id) VALUES (?)", (user_id,))
-        except aiosqlite.IntegrityError:
+        except sqlite3.IntegrityError:
             pass
 
     async def get_user_locations(self, user_id):
