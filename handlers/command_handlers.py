@@ -9,6 +9,8 @@ from forms.bot_state import BotState
 
 async def start(message: Message):
     kb_buttons = [[InlineKeyboardButton(text=str(turn/10), callback_data=str(turn))] for turn in schedule.turns_list]
+    kb_buttons = [kb_buttons[i] + kb_buttons[i+1] for i in range(0, len(kb_buttons), 2)]
+
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb_buttons)
     await message.answer(f"Оберіть свою чергу відключень нижче!\n Ви можете дізнатись свою чергу відключень за "
                          f"посиланнями: 📍Місто Рівне: https://shorturl.at/oMXLU\n📍Рівненська область: "

@@ -11,6 +11,7 @@ class Schedule:
         self.disconnections_by_turns = {}
         self.last_updated = ""
         self.previous_data = {}
+        self.timezone = TIMEZONE
 
     def fill(self, disconnections_table_content, last_update_text):
         start_index = 3 + 2 * NUM_TURNS + NUM_TURNS // 2
@@ -29,7 +30,7 @@ class Schedule:
         self.last_updated = last_update_text
 
     def need_updates(self):
-        time_now = datetime.datetime.now(TIMEZONE)
+        time_now = datetime.datetime.now(self.timezone)
         return not self.disconnections_by_turns or (time_now - self.get_last_updated_dt()).total_seconds() / 60 >= 30
 
     def update(self):
@@ -38,7 +39,8 @@ class Schedule:
         self.fill(parser.read_table(), parser.find_by_pattern(r"Оновлено: \d{2}\.\d{2}\.\d{4} \d{2}:\d{2}"))
 
     def get_last_updated_dt(self):
-        return datetime.datetime.strptime(" ".join(self.last_updated.split()[1:]), "%d.%m.%Y %H:%M")
+        return self.timezone.localize(
+            datetime.datetime.strptime(" ".join(self.last_updated.split()[1:]), "%d.%m.%Y %H:%M"))
 
     def get_schedule_by_turn(self, turn):
         return self.disconnections_by_turns[turn]

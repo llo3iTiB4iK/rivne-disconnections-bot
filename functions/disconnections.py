@@ -1,5 +1,5 @@
 import asyncio
-from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
+from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest, TelegramNetworkError
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 
@@ -50,7 +50,7 @@ class Disconnections:
             async with semaphore:
                 try:
                     await self.bot.send_message(user_id, msg_text, reply_markup=keyboard, parse_mode='HTML')
-                except (TelegramForbiddenError, TelegramBadRequest):
+                except (TelegramForbiddenError, TelegramBadRequest, TelegramNetworkError):
                     pass
                 await asyncio.sleep(1)
 
