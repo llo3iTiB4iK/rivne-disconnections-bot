@@ -65,13 +65,12 @@ class DatabaseManager:
         except sqlite3.IntegrityError:
             pass
 
-    async def get_user_locations(self, user_id):
+    async def get_user_locations(self, user_id=None):
         rows = await self._execute(
-            "SELECT tag_name, turn, userloc_id FROM usersLocations2 WHERE user_id = ?",
-            (user_id,),
-            fetch="all"
-        )
-        return [{"location": row[0], "turn": row[1], "id": row[2]} for row in rows]
+            "SELECT tag_name, turn, userloc_id, user_id FROM usersLocations2 WHERE user_id = ?", (user_id,), fetch="all"
+        ) if user_id else \
+            await self._execute("SELECT tag_name, turn, userloc_id, user_id FROM usersLocations2", fetch="all")
+        return [{"location": row[0], "turn": row[1], "id": row[2], "user_id": row[3]} for row in rows]
 
     async def add_user_location(self, user_id, turn, location_tag):
         await self._execute(

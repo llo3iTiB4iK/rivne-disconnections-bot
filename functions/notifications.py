@@ -1,5 +1,4 @@
 import asyncio
-import datetime
 from datetime import datetime, timedelta
 from aiogram.exceptions import TelegramForbiddenError
 
@@ -18,12 +17,13 @@ class Notifications:
     async def update_loop(self, interval):
         while True:
             users = [user for user in await db.get_users() if user[1]]
+            locations = await db.get_user_locations()
             disconnection_starts_by_turn = self.schedule.get_disconnections_start_times()
             now = datetime.now(self.timezone)
             semaphore = asyncio.Semaphore(30)
 
             async def check_user_notifications(user_id, minutes):
-                for user_location in await db.get_user_locations(user_id):
+                for user_location in [loc for loc in locations if loc['user_id'] == user_id]:
                     try:
                         turn_disconnections = disconnection_starts_by_turn[user_location["turn"]]
                     except KeyError:

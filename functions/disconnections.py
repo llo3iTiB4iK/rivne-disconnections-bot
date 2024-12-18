@@ -52,20 +52,19 @@ class Disconnections:
                     await self.bot.send_message(user_id, msg_text, reply_markup=keyboard, parse_mode='HTML')
                 except (TelegramForbiddenError, TelegramBadRequest, TelegramNetworkError):
                     pass
-                await asyncio.sleep(1)
+                await asyncio.sleep(0.5)
 
-        async def check_user_schedule_changes(user_id):
-            for user_location in await db.get_user_locations(user_id):
-                location_turn = user_location["turn"]
-                if location_turn in turns_changed_list:
-                    msg_text = f"З'явився або змінився графік за вашою локацією \"<b>{user_location['location']}</b>\""
-                    keyboard = InlineKeyboardMarkup(inline_keyboard=[[
-                        InlineKeyboardButton(text="Переглянути", callback_data=f"turn {location_turn}")
-                    ]])
-                    await send_message_with_limit(user_id, msg_text, keyboard)
+        async def check_location_schedule_changes(user_location):
+            location_turn = user_location["turn"]
+            if location_turn in turns_changed_list:
+                msg_text = f"З'явився або змінився графік за вашою локацією \"<b>{user_location['location']}</b>\""
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[[
+                    InlineKeyboardButton(text="Переглянути", callback_data=f"turn {location_turn}")
+                ]])
+                await send_message_with_limit(user_location["user_id"], msg_text, keyboard)
 
         start_time = datetime.now()
-        await asyncio.gather(*(check_user_schedule_changes(user_id) for user_id, _ in await db.get_users()))
+        await asyncio.gather(*(check_location_schedule_changes(loc) for loc in await db.get_user_locations()))
         print((datetime.now() - start_time).total_seconds(), 'секунд - Надсилання сповіщень про зміну графіків')
 
 
