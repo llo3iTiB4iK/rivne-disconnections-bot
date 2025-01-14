@@ -14,5 +14,5 @@ class Parser:
         table = soup.find("table")
         return [cell.getText() for cell in table.find_all("td")]
 
-    def find_by_pattern(self, pattern):
+    def find_text_by_pattern(self, pattern):
         return re.search(pattern, self.content).group()
