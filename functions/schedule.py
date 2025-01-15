@@ -50,7 +50,8 @@ class Schedule:
         if self.disconnections_by_turns and self.previous_data:
             for turn, turn_schedule in self.disconnections_by_turns.items():
                 for date, hours in turn_schedule.items():
-                    if date not in self.previous_data[turn] and hours and hours != ['Очікується']:
+                    if (date not in self.previous_data[turn] and hours and hours != ['Очікується'])\
+                            or (date in self.previous_data[turn] and hours != self.previous_data[turn][date]):
                         changed_turns.append(turn)
                         break
         return changed_turns
