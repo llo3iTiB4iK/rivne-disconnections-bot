@@ -35,6 +35,8 @@ class Disconnections:
                 msg_text += f"<u>{date}</u> очікуються відключення електропостачання ☠:\n<b>{',/t'.join(hours)}</b>\n\n"
             else:
                 msg_text += f"<u>{date}</u> не планується відключень електропостачання 🥰\n\n"
+        if not schedule_by_turn:
+            msg_text += "<b><u>Відсутні актуальні дані про планові відключення електроенергії</u></b>\n\n"
         msg_text += f"<i>{self.schedule.last_updated} (з офіційного сайту Рівнеобленерго)</i>"
         keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Рівнеобленерго",
                                                                                url=DISCONNECTIONS_URL)]])
