@@ -20,11 +20,13 @@ async def turn_to_add_chosen(call: CallbackQuery, state: FSMContext):
         return
     await call.message.answer("<i>Дайте назву для доданої Вами локації (наприклад 'Дім'):</i>", parse_mode='HTML')
     await state.set_state(BotState.waiting_for_loc_tag_input)
+    await call.answer()
 
 
 async def turn_to_show_disconnections_chosen(call: CallbackQuery):
     turn = int(call.data.split()[1])
     await disconnections.show_times(user_id=call.message.chat.id, turn=turn)
+    await call.answer()
 
 
 async def add_location_button_pressed(call: CallbackQuery):
@@ -34,6 +36,8 @@ async def add_location_button_pressed(call: CallbackQuery):
         pass
     else:
         await start(call.message)
+    finally:
+        await call.answer()
 
 
 async def delete_location_button_pressed(call: CallbackQuery):
@@ -48,6 +52,8 @@ async def delete_location_button_pressed(call: CallbackQuery):
     else:
         await db.delete_user_location(location_id)
         await call.message.answer(f'<i>Локацію було успішно видалено!</i>', parse_mode='HTML')
+    finally:
+        await call.answer()
 
 
 async def button_in_notifications_menu_pressed(call: CallbackQuery):
@@ -68,3 +74,5 @@ async def button_in_notifications_menu_pressed(call: CallbackQuery):
             else f'<i>Тепер для Вас надходитимуть сповіщення за {call.data} до планового відключення</i>'
 
         await call.message.answer(msg_text, parse_mode='HTML')
+    finally:
+        await call.answer()
