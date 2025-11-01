@@ -13,9 +13,12 @@ async def start(message: Message):
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb_buttons)
     await message.answer(f"Оберіть свою чергу відключень нижче!\n Ви можете дізнатись свою чергу відключень за "
-                         f"посиланнями: 📍Місто Рівне: https://shorturl.at/oMXLU\n📍Рівненська область: "
-                         f"https://shorturl.at/zVUTT", link_preview_options=LinkPreviewOptions(is_disabled=True),
-                         reply_markup=keyboard, parse_mode='HTML')
+                         f"посиланнями: 📍Місто Рівне: "
+                         f"https://www.roe.vsei.ua/wp-content/uploads/2025/10/GPV_cherga_misto_Rivne.pdf\n"
+                         f"📍Рівненська область: "
+                         f"https://www.roe.vsei.ua/wp-content/uploads/2025/10/GPV_cherga_Rivnenska_oblast.pdf",
+                         link_preview_options=LinkPreviewOptions(is_disabled=True), reply_markup=keyboard,
+                         parse_mode='HTML')
 
 
 async def show_disconnections(message: Message, state: FSMContext):
