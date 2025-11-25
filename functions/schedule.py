@@ -22,10 +22,13 @@ class Schedule:
 
         for i, turn in enumerate(self.turns_list):
             disconnection_hours = disconnections_table_content[start_index + i + 1::NUM_TURNS + 1]
-            self.disconnections_by_turns[turn] = {
-                date: split(hours, 13) for date, hours in zip(dates, disconnection_hours)
-                if datetime.strptime(date, "%d.%m.%Y").date() >= datetime.now(self.timezone).date()
-            }
+            self.disconnections_by_turns[turn] = {}
+            for date, hours in zip(dates, disconnection_hours):
+                try:
+                    if datetime.strptime(date, "%d.%m.%Y").date() >= datetime.now(self.timezone).date():
+                        self.disconnections_by_turns[turn][date] = split(hours, 13)
+                except ValueError:
+                    continue
 
         self.last_updated = last_update_text
 

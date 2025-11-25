@@ -32,7 +32,7 @@ class Disconnections:
             return
         for date, hours in schedule_by_turn.items():
             if hours:
-                msg_text += f"<u>{date}</u> очікуються відключення електропостачання ☠:\n<b>{',/t'.join(hours)}</b>\n\n"
+                msg_text += f"<u>{date}</u> очікуються відключення електропостачання ☠:\n<b>{',    '.join(hours)}</b>\n\n"
             else:
                 msg_text += f"<u>{date}</u> не планується відключень електропостачання 🥰\n\n"
         if not schedule_by_turn:
