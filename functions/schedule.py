@@ -38,7 +38,11 @@ class Schedule:
 
     def update(self):
         self.previous_data = self.disconnections_by_turns.copy()
-        parser = Parser(DISCONNECTIONS_URL)
+        try:
+            parser = Parser(DISCONNECTIONS_URL)
+        except Exception:
+            return
+
         self.fill(parser.read_table(), parser.find_text_by_pattern(r"Оновлено: \d{2}\.\d{2}\.\d{4} \d{2}:\d{2}"))
 
     def get_last_updated_dt(self):
