@@ -40,10 +40,19 @@ class Schedule:
         self.previous_data = self.disconnections_by_turns.copy()
         try:
             parser = Parser(DISCONNECTIONS_URL)
-        except Exception:
-            return
+            table_data = parser.read_table()
+            updated_text = parser.find_text_by_pattern(
+                r"Оновлено: \d{2}\.\d{2}\.\d{4} \d{2}:\d{2}"
+            )
 
-        self.fill(parser.read_table(), parser.find_text_by_pattern(r"Оновлено: \d{2}\.\d{2}\.\d{4} \d{2}:\d{2}"))
+            if not updated_text:
+                print("Update timestamp not found")
+
+            self.fill(table_data, updated_text)
+
+        except Exception as e:
+            print("Parser error:", e)
+            return
 
     def get_last_updated_dt(self):
         return self.timezone.localize(
