@@ -16,12 +16,15 @@ class Disconnections:
 
     async def update_loop(self, interval):
         while True:
-            turns_changed = None
-            if self.schedule.need_updates():
-                self.schedule.update()
-                turns_changed = self.schedule.get_changed_turns()
-            if turns_changed:
-                await self.notify_schedule_change(turns_changed)
+            try:
+                turns_changed = None
+                if self.schedule.need_updates():
+                    self.schedule.update()
+                    turns_changed = self.schedule.get_changed_turns()
+                if turns_changed:
+                    await self.notify_schedule_change(turns_changed)
+            except Exception as e:
+                print(f"Помилка під час оновлення розкладу: {e}")
             await asyncio.sleep(60 * interval)
 
     async def show_times(self, user_id, turn):
