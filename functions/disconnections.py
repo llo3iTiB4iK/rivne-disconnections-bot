@@ -27,8 +27,8 @@ class Disconnections:
                 print(f"Помилка під час оновлення розкладу: {e}")
             await asyncio.sleep(60 * interval)
 
-    async def show_times(self, user_id, turn):
-        msg_text = ""
+    async def show_times(self, user_id, turn, location_name):
+        msg_text = f"<b>📍 Локація: {location_name}</b>\n\n"
         try:
             schedule_by_turn = self.schedule.get_schedule_by_turn(turn)
         except KeyError:
@@ -61,10 +61,11 @@ class Disconnections:
 
         async def check_location_schedule_changes(user_location):
             location_turn = user_location["turn"]
+            location_name = user_location["location"]
             if location_turn in turns_changed_list:
                 msg_text = f"З'явився або змінився графік за вашою локацією \"<b>{user_location['location']}</b>\""
                 keyboard = InlineKeyboardMarkup(inline_keyboard=[[
-                    InlineKeyboardButton(text="Переглянути", callback_data=f"turn {location_turn}")
+                    InlineKeyboardButton(text="Переглянути", callback_data=f"turn|{location_turn}|{location_name}")
                 ]])
                 await send_message_with_limit(user_location["user_id"], msg_text, keyboard)
 

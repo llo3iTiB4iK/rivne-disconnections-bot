@@ -31,7 +31,7 @@ dp.message.register(state.support_request_entered, BotState.waiting_for_support_
 
 # Register callback handlers
 dp.callback_query.register(callback.turn_to_add_chosen, lambda call: call.data.isnumeric())
-dp.callback_query.register(callback.turn_to_show_disconnections_chosen, lambda call: call.data.startswith("turn "))
+dp.callback_query.register(callback.turn_to_show_disconnections_chosen, lambda call: call.data.startswith("turn|"))
 dp.callback_query.register(callback.add_location_button_pressed, lambda call: call.data == 'add_location')
 dp.callback_query.register(callback.delete_location_button_pressed,
                            lambda call: call.data.startswith('delete_location'))

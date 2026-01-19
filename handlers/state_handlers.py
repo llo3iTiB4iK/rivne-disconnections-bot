@@ -12,7 +12,7 @@ async def location_tag_entered(message: Message, state: FSMContext):
     await db.add_user_location(user_id=message.chat.id, turn=data.get("turn"), location_tag=message.text)
     await db.add_user(message.chat.id)
     await message.answer(f"Локацію <b>'{message.text}'</b> було успішно додано!", parse_mode='HTML')
-    await disconnections.show_times(message.chat.id, turn=data.get("turn"))
+    await disconnections.show_times(message.chat.id, turn=data.get("turn"), location_name=message.text)
     await message.answer("<i>Надалі Ви можете використовувати команду з меню (зліва від поля введення повідомлення) для"
                          " відображення графіків відключень!</i>", parse_mode='HTML')
     await state.set_state(BotState.location_added)

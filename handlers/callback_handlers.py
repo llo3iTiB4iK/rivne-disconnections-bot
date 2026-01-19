@@ -24,8 +24,8 @@ async def turn_to_add_chosen(call: CallbackQuery, state: FSMContext):
 
 
 async def turn_to_show_disconnections_chosen(call: CallbackQuery):
-    turn = int(call.data.split()[1])
-    await disconnections.show_times(user_id=call.message.chat.id, turn=turn)
+    _, turn, location_name = call.data.split("|")
+    await disconnections.show_times(user_id=call.from_user.id, turn=int(turn), location_name=location_name)
     await call.answer()
 
 

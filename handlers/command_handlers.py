@@ -28,7 +28,7 @@ async def show_disconnections(message: Message, state: FSMContext):
         kb_buttons = []
         for location in user_locations:
             kb_buttons.append([InlineKeyboardButton(text=location["location"] if location["location"] else
-                                                    "Локація без назви", callback_data=f"turn {location['turn']}")])
+                                                    "Локація без назви", callback_data=f"turn|{location['turn']}|{location['location']}")])
         keyboard = InlineKeyboardMarkup(inline_keyboard=kb_buttons)
         await message.answer("<i>Оберіть одну з Ваших локацій, де Ви хочете переглянути графіки відключень</i>",
                              reply_markup=keyboard, parse_mode='HTML')
